@@ -289,7 +289,7 @@ details.mbk table{margin:0 8px 10px}
 <div id="printArea"></div>
 <script>
 /* ================= ESTADO ================= */
-var ROWS=[], PROD={}, CATM={}, TIEM={}, CFG={picking:823566,meta:99.95,periodo:'',embExc:'',embInc:'',syncUrl:'https://script.google.com/macros/s/AKfycbxsT1bDBJj2myO_7YZ802odzZY9OPTcuAAPqhRTwtAHDSAIqlI_ssAKdxQza5SO5UCj1Q/exec?t=cendis-token-2026',autoSync:'SÍ',rutasExtra:'',verCerradas:'NO'};
+var ROWS=[], PROD={}, CATM={}, TIEM={}, CFG={picking:823566,meta:99.95,periodo:'',embExc:'',embInc:'',syncUrl:'https://script.google.com/macros/s/AKfycbxmN3fvbcMqnIvVKBf6yKlFTt83T4CMSD2e6KEm5YbHox7ooVvIt3Sxr3z66D5c4tFZxg/exec?t=cendis-token-2026',autoSync:'SÍ',rutasExtra:'',verCerradas:'NO'};
 var FILT={tipo:'todos',q:'',page:1}, GF={sec:'',tie:'',fd:'',fh:''}, PER=15;
 var SECS=[],TIES=[],EXTRA=null;
 var RUTAS={'VLL':'SECTOR 1','LBD':'SECTOR 1','CTO':'SECTOR 1','FOR-PRS':'SECTOR 1','VGA':'SECTOR 1','ANT':'SECTOR 1','PPT':'SECTOR 1','CAT':'SECTOR 1','CLP':'SECTOR 1','GTN':'SECTOR 1','QTC':'SECTOR 1','LMU':'SECTOR 1','URD':'SECTOR 1','URF':'SECTOR 1','CDL':'SECTOR 1','SAM-CDL':'SECTOR 1','CCM':'SECTOR 1','FOR-ISF':'SECTOR 1','FOR-PZV':'SECTOR 2','TPV':'SECTOR 2','PDV-LCP':'SECTOR 2','SGO':'SECTOR 2','MPC':'SECTOR 2','ECOM':'SECTOR 2','CTU':'SECTOR 2','CTD':'SECTOR 2','CTT':'SECTOR 2','SBC':'SECTOR 2','CHA':'SECTOR 3','SAM-CHA':'SECTOR 3','CCT':'SECTOR 3','BTA':'SECTOR 3','MDB':'SECTOR 3','MVT-PCC':'SECTOR 3','PTU':'SECTOR 3','PTT':'SECTOR 3','CTS':'SECTOR 3','MVT-CCT':'SECTOR 3','NGT':'GRAN CARACAS','ARO-NAC':'GRAN CARACAS','ARO-INT':'GRAN CARACAS','VAR':'GRAN CARACAS','TLG':'GRAN CARACAS','CTM':'GRAN CARACAS','GRA':'GRAN CARACAS','FOR-GTE':'GRAN CARACAS','JQT':'GRAN CARACAS','GTE':'GRAN CARACAS','STL':'VALLES','CTL':'VALLES','STT':'VALLES','OCT':'VALLES','SCM':'VALLES','CMC':'VALLES','FOR-CHV':'VALLES','CHV':'VALLES','TEQ':'VALLES','TED':'VALLES','ADO':'VALLES','TQT':'VALLES','TVR':'RUTA 1','BLS':'RUTA 1','TRU':'RUTA 1','TJL':'RUTA 1','BCO':'RUTA 1','MID':'RUTA 1','EJD':'RUTA 1','VIG':'RUTA 1','CSZ':'RUTA 1','SMT':'RUTA 1','PDV-ODA':'RUTA 1','ODA':'RUTA 1','CBM':'RUTA 1','SMZ':'RUTA 1','MJN':'RUTA 1','PDV-ZUL':'RUTA 1','BZU':'RUTA 1','BZD':'RUTA 1','BZT':'RUTA 1','BZC':'RUTA 1','MVT-BVT':'RUTA 1','SAM-ZUL':'RUTA 1','CRR':'RUTA 1','MTP':'RUTA 1','CBR':'RUTA 1','MGZ':'RUTA 1','TCO':'RUTA 1','SAM-LAR':'RUTA 1','LLN':'RUTA 1','QBR':'RUTA 1','MVT-LNS':'RUTA 1','ARY':'RUTA 1','ECJ':'RUTA 1','MNT':'RUTA 1','CCH':'RUTA 1','NGA':'RUTA 1','SNR':'RUTA 1','LAR':'RUTA 1','DCA':'RUTA 1','COD':'RUTA 1','YTG':'RUTA 1','CHI':'RUTA 1','YAR':'RUTA 1','MCQ':'RUTA 1','MIR':'RUTA 1','BJM':'RUTA 1','THA':'RUTA 2','MVT-SCB':'RUTA 2','SBB':'RUTA 2','SCP':'RUTA 2','PDB':'RUTA 2','BCD':'RUTA 2','CCB':'RUTA 2','BNS':'RUTA 2','SNT':'RUTA 2','GNR':'RUTA 2','CBQ':'RUTA 2','BCC':'RUTA 2','GNO':'RUTA 2','OPO':'RUTA 2','PSA':'RUTA 2','TRN':'RUTA 2','PIR':'RUTA 2','SRO':'RUTA 2','COE':'RUTA 2','TQO':'RUTA 2','TCY':'RUTA 2','ADS-TCY':'RUTA 2','PTA':'RUTA 3','ELZ':'RUTA 3','ACG':'RUTA 3','MTC':'RUTA 3','APU':'RUTA 3','CLB':'RUTA 3','SBO':'RUTA 3','SJM':'RUTA 3','VDC':'RUTA 3','CAG':'RUTA 3','MCY':'RUTA 3','MEC':'RUTA 3','MVT-LDC':'RUTA 3','CCA':'RUTA 3','PLN':'RUTA 3','STR':'RUTA 3','TMO':'RUTA 3','VTA':'RUTA 3','CLT':'RUTA 3','ACO':'RUTA 4','CTA':'RUTA 4','ATV':'RUTA 4','TGO':'RUTA 4','PDV-STM':'RUTA 4','TGR':'RUTA 4','VDP':'RUTA 4','ZAR':'RUTA 4','PRG':'RUTA 4','CBV':'RUTA 4','TCD':'RUTA 4','LPG':'RUTA 4','CCO':'RUTA 4','MKU':'RUTA 4','MKD':'RUTA 4','SFX':'RUTA 4','ORK':'RUTA 4','UPT':'RUTA 4','GPT':'RUTA 4','CLL':'RUTA 4','TMR':'RUTA 4','SEU':'RUTA 4','EMT':'RUTA 4','ABM':'RUTA 4','ACB':'RUTA 4','TBD':'RUTA 4','TCP':'RUTA 4','BRC':'RUTA 4','PDV-MUN':'RUTA 4','MUN':'RUTA 4','PDM':'RUTA 4','CRT':'RUTA 4','CRP':'RUTA 4','UNR':'RUTA 4','SAM-PFO':'RUTA 5','PFO':'RUTA 5','AVM':'RUTA 5','COR':'RUTA 5','CHC':'RUTA 5','TCC':'RUTA 5','MRN':'RUTA 5','PTC':'RUTA 5','CGA':'RUTA 5','GIA':'RUTA 6','CPN':'RUTA 6','CNA':'RUTA 6','CUA':'RUTA 6','BCN':'RUTA 6','PLS':'RUTA 6','MVT-GRZ':'RUTA 6','CJP':'RUTA 6','LCH':'RUTA 6','MGT':'RUTA 6','IGD':'RUTA 6','SAM-MGT':'RUTA 6','BAC':'RUTA 6','PML':'RUTA 6','PRT':'RUTA 7','CRN':'RUTA 7','RCO':'RUTA 7','HGT':'RUTA 7','CUG':'RUTA 7'};
@@ -350,7 +350,7 @@ function load(){try{var r=localStorage.getItem('cendis_inc_rows'),c=localStorage
  if(r){ROWS=JSON.parse(r)||[];ROWS.forEach(function(x){x.estatus=normEst(x.estatus);
   x.codf=codNorm(x.codf);x.codr=codNorm(x.codr)})}
  if(c)CFG=Object.assign(CFG,JSON.parse(c)||{})}catch(e){}}
-function pSave(){try{
+function pSave(){try{localStorage.removeItem('cendis_no_autodata');
  /* formato compacto v2: descripción y categoría se guardan UNA vez por producto, no por código (~8MB → ~2.5MB) */
  var ci={},cs=[],gi={},gs=[];
  Object.keys(PROD).forEach(function(k){var e=PROD[k];if(!e)return;
@@ -376,7 +376,7 @@ function warnStorage(msg){
  b.innerHTML=msg;b.style.display='block'}
 function cSave(){try{localStorage.setItem('cendis_inc_catm',JSON.stringify(CATM))}catch(e){}}
 function cLoad(){try{var c=localStorage.getItem('cendis_inc_catm');if(c)CATM=JSON.parse(c)||{}}catch(e){}}
-function tSave(){try{localStorage.setItem('cendis_inc_tie',JSON.stringify(TIEM))}catch(e){}}
+function tSave(){try{localStorage.removeItem('cendis_no_autodata');localStorage.setItem('cendis_inc_tie',JSON.stringify(TIEM))}catch(e){}}
 function tLoad(){try{var t=localStorage.getItem('cendis_inc_tie');if(t)TIEM=JSON.parse(t)||{}}catch(e){}}
 
 /* ================= CATEGORÍAS: GRUPOS Y NIVELES ================= */
@@ -571,6 +571,11 @@ function limpiarNombre(s){
  return nT(s)}
 function parseTiendas(txt){
  var ls=txt.replace(/\r/g,'').split('\n');
+ var fixed=[];
+ for(var q=0;q<ls.length;q++){var ql=ls[q];
+  while(((ql.split('"').length-1)%2)===1&&q+1<ls.length){q++;ql=ql+' '+nT(ls[q])}
+  fixed.push(ql)}
+ ls=fixed;
  var ruta='',n=0,cerr=0;
  var RE=/^\s*(SECTOR\s*[0-9]+|GRAN\s*CARACAS|VALLES|VALLE|RUTA\s*[0-9]+)\s*$/i;
  ls.forEach(function(l){
@@ -665,7 +670,12 @@ function parseInput(txt,desde){
  var sp=sepDe(txt),map=null,st=0;
  var h=splitL(ls[0],sp).map(function(x){return sA(x).replace(/\s+/g,' ')});
  if(h.some(function(x){return x.indexOf('CASO')>=0||x.indexOf('TIEMPO DEL REPORTE')>=0||x.indexOf('SEDES')>=0})){
-  map={};h.forEach(function(x,i){var f=HDR[x];if(f&&map[f]===undefined)map[f]=i});st=1}
+  map={};h.forEach(function(x,i){var f=HDR[x];if(f&&map[f]===undefined)map[f]=i});st=1;
+  var exp=0;Object.keys(map).forEach(function(k){if(map[k]+1>exp)exp=map[k]+1});
+  var merged=[];ls.slice(st).forEach(function(l){
+   if(merged.length&&splitL(merged[merged.length-1],sp).length<exp){merged[merged.length-1]=merged[merged.length-1]+'\n'+l}
+   else{merged.push(l)}});
+  ls=merged;st=0}
  var out=[],n=0;
  for(var i=st;i<ls.length;i++){
   var cl=splitL(ls[i],sp);
@@ -1236,9 +1246,9 @@ function guardarAdd(){
 function resetDatos(){if(!confirm('¿Borrar TODAS las incidencias?\n(Se mantienen productos, tiendas, categorías y configuración)'))return;
  ROWS=[];save();FILT={tipo:'todos',q:'',page:1};GF={sec:'',tie:'',fd:'',fh:''};renderAll()}
 function resetTodo(){if(!confirm('¿Borrar TODO? (incidencias, config, diccionario, tiendas y mapeo de categorías)'))return;
- ROWS=[];CFG={picking:823566,meta:99.95,periodo:'',embExc:'',embInc:'',syncUrl:'https://script.google.com/macros/s/AKfycbxsT1bDBJj2myO_7YZ802odzZY9OPTcuAAPqhRTwtAHDSAIqlI_ssAKdxQza5SO5UCj1Q/exec?t=cendis-token-2026',autoSync:'SÍ',rutasExtra:'',verCerradas:'NO'};
+ ROWS=[];CFG={picking:823566,meta:99.95,periodo:'',embExc:'',embInc:'',syncUrl:'https://script.google.com/macros/s/AKfycbxmN3fvbcMqnIvVKBf6yKlFTt83T4CMSD2e6KEm5YbHox7ooVvIt3Sxr3z66D5c4tFZxg/exec?t=cendis-token-2026',autoSync:'SÍ'}
  PROD={};CATM={};TIEM={};
- save();pSave();cSave();tSave();renderAll()}
+ save();pSave();cSave();tSave();try{localStorage.setItem('cendis_no_autodata','1')}catch(x){};renderAll()}
 
 /* ================= EXPORTS ================= */
 function exportCSV(){if(!ROWS.length){alert('Sin datos.');return}
@@ -1561,22 +1571,35 @@ try{renderAll()}catch(e){
 if(CFG.syncUrl&&CFG.autoSync==='SÍ'){setTimeout(function(){try{sincronizar(true)}catch(e){console.error(e)}},600)}
 console.log('✓ App CENDIS v19 · registros: '+ROWS.length+' · productos: '+Object.keys(PROD).length+' · tiendas: '+Object.keys(TIEM).length+' · mapeo cats: '+Object.keys(CATM).length);
 </script>
-<<script>
-/* ===== CENDIS v2 · migración + auto-sincronización (añadido, no borrar) ===== */
+<script>
+/* ===== CENDIS v20 · URL + AUTOLOAD tiendas/productos desde el repo (no borrar) =====
+   - Sincronización con la URL buena; migra configs viejas (cendis_cfgv<20).
+   - AUTOLOAD: si no hay tiendas/productos guardados y el usuario NO pulsó "Borrar todo",
+     descarga tiendas.txt y categorias.csv del mismo repo y los carga solos.
+   - "Borrar todo" respeta tu decisión: no vuelven a cargarse solos hasta que cargues
+     un archivo manualmente desde 📥 Cargar Datos. "🗑 Volver al mapeo interno" también. */
 window.addEventListener('load',function(){setTimeout(function(){
  try{
-  var DEF='https://script.google.com/macros/s/AKfycbxsT1bDBJj2myO_7YZ802odzZY9OPTcuAAPqhRTwtAHDSAIqlI_ssAKdxQza5SO5UCj1Q/exec?t=cendis-token-2026';
+  var DEF='https://script.google.com/macros/s/AKfycbxmN3fvbcMqnIvVKBf6yKlFTt83T4CMSD2e6KEm5YbHox7ooVvIt3Sxr3z66D5c4tFZxg/exec?t=cendis-token-2026';
   var lv=0;try{lv=+(localStorage.getItem('cendis_cfgv')||0)}catch(x){}
-  if(lv<2){
-   if(!CFG.syncUrl)CFG.syncUrl=DEF;
-   CFG.autoSync='SÍ';
-   try{localStorage.setItem('cendis_cfgv','2')}catch(x){}
-   try{save()}catch(x){}
-  }
+  if(lv<20){CFG.syncUrl=DEF;CFG.autoSync='SÍ';try{localStorage.setItem('cendis_cfgv','20')}catch(x){}try{save()}catch(x){}}
   if(CFG.autoSync==='SÍ'&&CFG.syncUrl){try{sincronizar(true)}catch(x){}}
- }catch(e){}
-},700)});
+  var skip=false;try{skip=localStorage.getItem('cendis_no_autodata')==='1'}catch(x){}
+  if(!skip&&location.protocol.indexOf('http')===0){
+   if(!Object.keys(TIEM).length){
+    fetch('tiendas.txt',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('tiendas.txt no está en el repo');return r.text()}).then(function(t){
+     if(!nT(t))return;var st=parseTiendas(t);
+     if(st.n||st.c){tSave();renderAll();console.log('✓ Tiendas autoload: '+st.n+' activas, '+st.c+' cerradas')}
+    }).catch(function(e){console.warn('Autoload tiendas:',e.message)})}
+   if(!Object.keys(PROD).length){
+    fetch('categorias.csv',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('categorias.csv no está en el repo');return r.text()}).then(function(t){
+     if(!nT(t))return;var st=parseProductos(t);
+     if(st.n){pSave();asegurarCats();aplicarTraduccion();save();renderAll();console.log('✓ Productos autoload: '+st.n+' productos, '+st.a+' códigos')}
+    }).catch(function(e){console.warn('Autoload productos:',e.message)})}
+  }
+ }catch(e){console.error(e)}
+},800)});
 </script>
 </body>
 </html>
-<!-- ARCHIVO COMPLETO v19 ✓ (si ves esta línea, el archivo está entero) -->
+<!-- ARCHIVO COMPLETO v20 ✓ (si ves esta línea, el archivo está entero) -->
