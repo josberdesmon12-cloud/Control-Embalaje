@@ -149,7 +149,6 @@ details.mbk table{margin:0 8px 10px}
   <button class="btnO" onclick="limpiarGF()">✕ Limpiar</button>
   <b title="Unidades salientes del mes — la suma de lo procesado por los 16 pickers (WMS). Alimenta la Precisión de Embalaje.">Picking mes:</b><input id="gPick" type="text" style="width:110px" oninput="setCfg('picking',this.value)">
   <b title="Meta de precisión (%) del nivel de servicio">Meta&nbsp;%:</b><input id="gMeta" type="text" style="width:70px" oninput="setCfg('meta',this.value)">
-  <b title="Nombre del período para los reportes (ej: Septiembre 2026)">Período:</b><input id="gPer" style="width:150px" placeholder="Ej: Semana 38" oninput="setCfg('periodo',this.value)">
   <span id="gInfo" class="sub" style="color:var(--gold)"></span>
  </div>
 </header>
@@ -173,7 +172,7 @@ details.mbk table{margin:0 8px 10px}
 <section id="t-rep" class="hide"></section>
 <section id="t-mens" class="hide"></section>
 <section id="t-cat" class="hide">
- <div class="mtop"><div style="font-size:16px;font-weight:800">🎖️ Categorías / Productos</div><button class="btnG" onclick="openCarga()">📥 Cargar diccionario</button></div>
+ <div class="mtop"><div style="font-size:16px;font-weight:800">🎖️ Categorías / Productos</div></div>
  <div id="catBody"></div>
 </section>
 </main>
@@ -908,7 +907,7 @@ function renderChips(){var c=contadores();
  var s='';CH.forEach(function(x){
   s+='<button class="chip'+(FILT.tipo===x[0]?' on':'')+'" onclick="FILT.tipo=\''+x[0]+'\';FILT.page=1;renderTabla()">'+x[1]+' ('+c[x[0]]+')</button>'});
  $('chips').innerHTML=s}
-function filtradas(){var q=sA(FILT.q);
+function filtradas(){ROWS.forEach(function(r,i){r._ix=i});var q=sA(FILT.q);
  var dFd=GF.fd?pFec(GF.fd):null,dFh=GF.fh?pFec(GF.fh):null;
  var arr=ROWS.filter(function(r){
   if(!tiendaActiva(r))return false;
@@ -924,9 +923,7 @@ function filtradas(){var q=sA(FILT.q);
   else if(FILT.tipo!=='todos'){if(esErr(r))return false;var t=tipoC(r);if(String(t)!==FILT.tipo)return false}
   if(q&&[r.id,r.fecha,r.tienda,r.embalador,r.auditor,r.codf,r.codr,r.pf,r.pr,r.traslado,r.caso].map(sA).join(' ').indexOf(q)<0)return false;
   return true});
- arr.sort(function(a,b){var g=genT(b)-genT(a);if(g)return g;
-  var fa=pFec(a.fecha),fb=pFec(b.fecha);
-  return (fb?fb.getTime():0)-(fa?fa.getTime():0)});
+ arr.sort(function(a,b){return (b._ix||0)-(a._ix||0)});
  return arr}
 var THS=['ID','Fecha','Tienda','Traslado','Caso','Código','Fact.','Rec.','Dif.','Embalador','Auditor','Estatus',''];
 function renderTabla(){
@@ -945,7 +942,7 @@ function renderTabla(){
  $('pgTxt').textContent=rs.length?('Página '+FILT.page+' de '+tp+' · '+rs.length+' registros'):'';
  var M=compute({});
  var nprod=Object.keys(PROD).length;
- $('resumenData').innerHTML='<b>'+ROWS.length+'</b> registros · <b class="gold">'+M.ntrasl+'</b> incidencias (traslados) · <b>'+M.casos+'</b> líneas · <b>'+M.ntie+'</b> tiendas · <b style="color:#ff9c9c">'+M.sinAsig+'</b> sin asignar · <b class="red">'+M.err+'</b> erróneas'+(M.sinCat?' · <b style="color:#ffd45e">⚠ '+M.sinCat+' sin categoría</b>':'')+(nprod?' · <b style="color:#7fe0a8">📚 '+nprod+'</b>':'')}
+ $('resumenData').innerHTML='<b>'+ROWS.length+'</b> registros · <b class="gold">'+M.ntrasl+'</b> incidencias (traslados) · <b>'+M.casos+'</b> líneas · <b>'+M.ntie+'</b> tiendas · <b style="color:#ff9c9c">'+M.sinAsig+'</b> sin asignar · <b class="red">'+M.err+'</b> erróneas'+(nprod?' · <b style="color:#7fe0a8">📚 '+nprod+'</b>':'')}
 function pg(d){var tp=Math.max(1,Math.ceil(filtradas().length/PER));FILT.page=Math.min(tp,Math.max(1,FILT.page+d));renderTabla()}
 function borrarFila(id){ROWS=ROWS.filter(function(r){return r.id!==id});save();renderAll()}
 
@@ -965,7 +962,7 @@ function renderDash(){var M=compute(),p=CFG.picking||0;
  h+='<div class="sect"><h2>Nivel de Servicio de Embalaje</h2><div class="grid g4">';
  h+='<div class="card" style="border-color:'+(okMeta?'#2e5f43':'#6e2727')+'"><h3>Precisión de Embalaje</h3><div class="big '+(okMeta?'green':'red')+'">'+precTxt+'</div><div class="sub">1 − (U.Error ÷ Picking) · meta '+CFG.meta+'%</div></div>';
  h+='<div class="card"><h3>Margen de Error</h3><div class="big gold">'+margTxt+'</div><div class="sub">U.Error ÷ Picking</div></div>';
- h+='<div class="card"><h3>Unidades con Error</h3><div class="big red">'+fmtN(M.uerr)+'</div><div class="sub">que se le colaron al verificador y la tienda detectó</div></div>';
+ h+='<div class="card"><h3>Unidades con Error</h3><div class="big red">'+fmtN(M.uerr)+'</div><div class="sub">Que se le colaron al verificador y la tienda detectó</div></div>';
  h+='<div class="card"><h3>Picking Procesado</h3><div class="big">'+fmtN(p)+'</div><div class="sub">unidades salientes ⚙️ </div></div>';
  h+='</div></div>';
  h+='<div class="sect"><h2>🎖️ Incidencias por Nivel de Valor</h2>';
@@ -979,8 +976,6 @@ function renderDash(){var M=compute(),p=CFG.picking||0;
  h+='<div class="card" style="background:#3a2b10;border-color:#6e4a14"><h3 style="color:#ff9c40;font-size:12px">🟠 MEDIO VALOR</h3><div class="big orange">'+fmtN(nM)+'</div><div class="sub">'+fmtN(uM)+' unidades</div></div>';
  h+='<div class="card" style="background:#12253f;border-color:#1d3a5f"><h3 style="color:#4a9eff;font-size:12px">🔵 BAJO VALOR</h3><div class="big blue">'+fmtN(nB)+'</div><div class="sub">'+fmtN(uB)+' unidades</div></div>';
  h+='</div>';
- if(M.sinCat)h+='<p class="sub" style="margin-top:8px;color:#ffd45e">⚠ '+M.sinCat+' líneas sin categoría — detalle y Top Productos en 🎖️ Categorías/Productos</p>';
- else h+='<p class="sub" style="margin-top:8px">ℹ️ Detalle por grupo y Top Productos → pestaña 🎖️ Categorías/Productos</p>';
  h+='</div>';
  h+='<div class="sect"><h2>🎖️ KPIs por Categoría Afectada — de alto valor hacia abajo</h2><div class="card">';
  var cd=catsAfectadas(M);
@@ -990,7 +985,6 @@ function renderDash(){var M=compute(),p=CFG.picking||0;
   cd.forEach(function(x2){var d=x2[1];
    h+='<tr><td><b>'+esc(x2[0])+'</b></td><td><span class="badge b'+d.nivel+'">'+NIVELES[d.nivel]+'</span></td><td><b class="gold">'+d.nInc+'</b></td><td>'+d.nLin+'</td><td>'+d.nTie+'</td><td>'+d.nSk+'</td><td><b class="red">'+fmtN(d.u)+'</b></td><td>'+(M.uerr?100*d.u/M.uerr:0).toFixed(1)+'%</td><td><div class="mini"><div style="width:'+Math.max(3,Math.round(100*d.u/mxu))+'%"></div></div></td></tr>'});
   h+='</tbody></table>';
-  if(M.sinCat)h+='<p class="sub" style="margin-top:8px;color:#ffd45e">⚠ '+M.sinCat+' líneas sin categoría — códigos no hallados en el diccionario (📥 Cargar Datos → Producto ; Categoría).</p>';
  }else{
   h+='<div class="empty"><div class="bigE">🗂️</div>Sin categorías clasificadas.<br>Carga el diccionario <b>Producto ; Categoría</b> en 📥 Cargar Datos: cada incidencia hereda la categoría de su producto (código interno o EAN) y se agrupa y ordena sola.</div>'}
  h+='</div></div>';
@@ -1039,9 +1033,9 @@ function renderDash(){var M=compute(),p=CFG.picking||0;
  h+='</div></div>';
  h+='<div class="sect"><h2>🧑‍💼 Casos por Auditor — quién lo tiene y en qué estado ('+M.audArr.length+')</h2><div class="card">';
  if(M.audArr.length){
-  h+='<table><thead><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>% Res.</th><th>Erróneos</th><th>U.Error</th></tr></thead><tbody>';
+  h+='<table><thead><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>Erróneos</th><th>U.Error</th></tr></thead><tbody>';
   M.audArr.forEach(function(x){var d=x[1];
-   h+='<tr><td><b>'+esc(x[0])+'</b></td><td><b>'+d.casos+'</b></td><td><b class="gold">'+d.nTra+'</b></td><td style="color:#c9a3ff">'+d.nTie+'</td><td class="yellow">'+d.ver+'</td><td style="color:#ff9c40">'+d.proc+'</td><td style="color:#aaa">'+d.sin+'</td><td style="color:#7fe0a8">'+d.res+'</td><td class="green"><b>'+(d.casos?Math.round(100*d.res/d.casos):0)+'%</b></td><td style="color:#aaa">'+d.err+'</td><td><b class="red">'+fmtN(d.u)+'</b></td></tr>'});
+   h+='<tr><td><b>'+esc(x[0])+'</b></td><td><b>'+d.casos+'</b></td><td><b class="gold">'+d.nTra+'</b></td><td style="color:#c9a3ff">'+d.nTie+'</td><td class="yellow">'+d.ver+'</td><td style="color:#ff9c40">'+d.proc+'</td><td style="color:#aaa">'+d.sin+'</td><td style="color:#7fe0a8">'+d.res+'</td><td style="color:#aaa">'+d.err+'</td><td><b class="red">'+fmtN(d.u)+'</b></td></tr>'});
   h+='</tbody></table><div class="leg"><span>Alimenta esta tabla la columna <b>AUDITOR EN CASO</b> de la hoja CONTROL DE RECLAMOS · los casos sin auditor cuentan como "Sin Asignar"</span></div>'}
  else h+='<div class="empty"><div class="bigE">🧑‍💼</div>Sin auditores asignados todavía.<br>Se llena desde la columna <b>AUDITOR EN CASO</b> (celda C) de tu hoja CONTROL DE RECLAMOS.</div>';
  h+='</div></div>';
@@ -1084,9 +1078,9 @@ function renderRep(){var M=compute();
  h+='</tbody></table></div></div>';
  h+='<div class="sect"><h2>🧑‍💼 Casos por Auditor — estado de cada caso ('+M.audArr.length+')</h2><div class="card">';
  if(M.audArr.length){
-  h+='<table><thead><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>% Res.</th><th>Erróneos</th><th>U.Error</th></tr></thead><tbody>';
+  h+='<table><thead><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>Erróneos</th><th>U.Error</th></tr></thead><tbody>';
   M.audArr.forEach(function(x){var d=x[1];
-   h+='<tr><td><b>'+esc(x[0])+'</b></td><td><b>'+d.casos+'</b></td><td><b class="gold">'+d.nTra+'</b></td><td style="color:#c9a3ff">'+d.nTie+'</td><td class="yellow">'+d.ver+'</td><td style="color:#ff9c40">'+d.proc+'</td><td style="color:#aaa">'+d.sin+'</td><td style="color:#7fe0a8">'+d.res+'</td><td class="green"><b>'+(d.casos?Math.round(100*d.res/d.casos):0)+'%</b></td><td style="color:#aaa">'+d.err+'</td><td><b class="red">'+fmtN(d.u)+'</b></td></tr>'});
+   h+='<tr><td><b>'+esc(x[0])+'</b></td><td><b>'+d.casos+'</b></td><td><b class="gold">'+d.nTra+'</b></td><td style="color:#c9a3ff">'+d.nTie+'</td><td class="yellow">'+d.ver+'</td><td style="color:#ff9c40">'+d.proc+'</td><td style="color:#aaa">'+d.sin+'</td><td style="color:#7fe0a8">'+d.res+'</td><td style="color:#aaa">'+d.err+'</td><td><b class="red">'+fmtN(d.u)+'</b></td></tr>'});
   h+='</tbody></table>'}
  else h+='<div class="empty">Sin auditores asignados — llena la columna AUDITOR EN CASO en la hoja.</div>';
  h+='</div></div>';
@@ -1159,7 +1153,7 @@ function renderCat(){
   h+='<div class="card"><table><thead><tr><th>#</th><th>Grupo</th><th>Nivel</th><th>Incid.</th><th>Líneas</th><th>Tiendas</th><th>SKU</th><th>U.Error</th></tr></thead><tbody>';
   conDato.forEach(function(x){var d=x[1];
    h+='<tr><td class="sub">'+d.ord+'</td><td><b>'+esc(x[0])+'</b></td><td><span class="badge b'+d.nivel+'">'+NIVELES[d.nivel]+'</span></td><td><b class="gold">'+d.nInc+'</b></td><td style="color:#ff9c40">'+d.nLin+'</td><td style="color:#c9a3ff">'+d.nTie+'</td><td>'+d.nSk+'</td><td><b class="red">'+fmtN(d.u)+'</b></td></tr>'});
-  h+='</tbody></table>'+(M.sinCat?'<p class="sub" style="margin-top:8px;color:#ffd45e">⚠ '+M.sinCat+' líneas sin categoría (producto sin clasificar o código no encontrado en el diccionario).</p>':'')+'</div>'}
+  h+='</tbody></table></div>'}
  else h+='<div class="card"><div class="empty">Sin incidencias clasificadas — carga el diccionario con categorías, mapea y sincroniza data.</div></div>';
  h+='</div>';
  h+='<div class="sect"><h2>📦 Top 20 Productos por unidades afectadas</h2>';
@@ -1191,7 +1185,7 @@ function borrarMapeo(){
  CATM={};cSave();renderAll()}
 
 /* ================= RENDER CONFIG ================= */
-function renderCfg(){$('cPer').value=CFG.periodo||'';$('cPick').value=CFG.picking||'';$('cMeta').value=CFG.meta||'';
+function renderCfg(){$('gPick').value=CFG.picking||'';$('gMeta').value=CFG.meta||'';
  $('cEmbExc').value=CFG.embExc||'';$('cEmbInc').value=CFG.embInc||'';
  $('cSyncUrl').value=CFG.syncUrl||'';$('cAutoSync').value=CFG.autoSync||'NO';$('cRutas').value=CFG.rutasExtra||'';
  $('cVerCerr').value=CFG.verCerradas||'NO'}
@@ -1405,7 +1399,7 @@ function renderMensual(){var M=compute();
  if(fi)h+='<p class="sub" style="color:var(--gold);margin-bottom:6px">🔎 Filtrado por: '+esc(fi)+' — quítalo con ✕ Limpiar en la barra superior</p>';
  var okMeta=M.prec!==null&&M.prec>=(CFG.meta||99.95);
  h+='<div class="paper">';
- h+='<div class="phead"><div class="psub">CENDIS · Centro de Distribución — Calidad y Control</div><h1>Reporte Mensual de Incidencias</h1><div class="psub plano">'+(CFG.periodo?'Período: <b>'+esc(CFG.periodo)+'</b>':'Período sin configurar — define el nombre en ⚙️ Config')+'</div></div>';
+ h+='<div class="phead"><div class="psub">CENDIS · Centro de Distribución — Calidad y Control</div><h1>Reporte Mensual de Incidencias</h1><div class="psub plano">'+(CFG.periodo?'Período: <b>'+esc(CFG.periodo)+'</b>':'')+'</div></div>';
  h+='<div class="pmeta"><span><b>Generado:</b> '+new Date().toLocaleString('es-VE')+'</span><span><b>Fuente:</b> Control de Reclamos</span><span>'+(fi?'<b>Filtro:</b> '+esc(fi):'<b>Alcance:</b> toda la red')+'</span></div>';
  h+='<h3>1 · Nivel de servicio del período</h3><div class="kg">';
  h+=kb(M.prec===null?'N/D':M.prec.toFixed(2)+'%','Precisión de embalaje · meta '+CFG.meta+'%',okMeta?'lvlB':'lvlA');
@@ -1437,7 +1431,6 @@ function renderMensual(){var M=compute();
   cd.forEach(function(x,i){var d=x[1];
    h+='<tr><td>'+(i+1)+'</td><td><b>'+esc(x[0])+'</b></td><td class="lvl'+d.nivel+'">'+NIVELES[d.nivel]+'</td><td style="text-align:right"><b>'+d.nInc+'</b></td><td style="text-align:right">'+d.nLin+'</td><td style="text-align:right">'+d.nTie+'</td><td style="text-align:right">'+d.nSk+'</td><td style="text-align:right"><b>'+fmtN(d.u)+'</b></td><td style="text-align:right">'+(M.uerr?100*d.u/M.uerr:0).toFixed(1)+'%</td></tr>'});
   h+='</table>';
-  if(M.sinCat)h+='<p style="font-size:10.5px;color:#8a6d00">⚠ '+M.sinCat+' líneas sin categoría — códigos no encontrados en el diccionario. Actualízalo en 📥 Cargar Datos.</p>';
  }else h+='<p style="font-size:11px;color:#666">Sin categorías clasificadas — carga el diccionario Producto ; Categoría en 📥 Cargar Datos: cada incidencia hereda la categoría de su producto (código interno o EAN) y se agrupa sola.</p>';
  h+='<h3>5 · Top 20 productos afectados</h3>'+mensTablaProd(M,20);
  h+='<h3>6 · Detalle completo — todos los productos afectados ('+M.prodArr.length+')</h3>'+mensTablaProd(M,0);
@@ -1453,9 +1446,9 @@ function renderMensual(){var M=compute();
   h+='<tr><td><b>'+esc(x[0])+'</b></td><td style="text-align:right"><b>'+d.nTra+'</b></td><td style="text-align:right">'+d.nLin+'</td><td style="text-align:right">'+d.nTie+'</td><td style="text-align:right">'+d.nF+'</td><td style="text-align:right">'+d.nE+'</td><td style="text-align:right">'+d.nI+'</td><td style="text-align:right"><b>'+fmtN(d.u)+'</b></td><td style="text-align:right">'+(d.topCat?esc(d.topCat[0])+' ('+fmtN(d.topCat[1].u)+' u · '+d.topCat[1].pct.toFixed(0)+'%)':'—')+'</td></tr>'});
  h+='</table>';
  h+='<h3>10 · Casos por auditor ('+M.audArr.length+')</h3>';
- if(M.audArr.length){h+='<table><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>% Res.</th><th>Erróneos</th><th>U.Error</th></tr>';
+ if(M.audArr.length){h+='<table><tr><th>Auditor</th><th>Casos</th><th>Incid.</th><th>Tiendas</th><th>Por verificar</th><th>En proceso</th><th>Sin asignar</th><th>Resueltos</th><th>Erróneos</th><th>U.Error</th></tr>';
   M.audArr.forEach(function(x){var d=x[1];
-   h+='<tr><td><b>'+esc(x[0])+'</b></td><td style="text-align:right">'+d.casos+'</td><td style="text-align:right"><b>'+d.nTra+'</b></td><td style="text-align:right">'+d.nTie+'</td><td style="text-align:right">'+d.ver+'</td><td style="text-align:right">'+d.proc+'</td><td style="text-align:right">'+d.sin+'</td><td style="text-align:right">'+d.res+'</td><td style="text-align:right">'+(d.casos?Math.round(100*d.res/d.casos):0)+'%</td><td style="text-align:right">'+d.err+'</td><td style="text-align:right"><b>'+fmtN(d.u)+'</b></td></tr>'});
+   h+='<tr><td><b>'+esc(x[0])+'</b></td><td style="text-align:right">'+d.casos+'</td><td style="text-align:right"><b>'+d.nTra+'</b></td><td style="text-align:right">'+d.nTie+'</td><td style="text-align:right">'+d.ver+'</td><td style="text-align:right">'+d.proc+'</td><td style="text-align:right">'+d.sin+'</td><td style="text-align:right">'+d.res+'</td><td style="text-align:right">'+d.err+'</td><td style="text-align:right"><b>'+fmtN(d.u)+'</b></td></tr>'});
   h+='</table>'}
  else h+='<p style="font-size:11px;color:#666">Sin auditores asignados — llena la columna AUDITOR EN CASO en la hoja.</p>';
  h+='<div class="pfoot"><span>Precisión = 1 − (U.Error ÷ Picking Procesado) · 1 incidencia = 1 traslado afectado</span><span>Control de Incidencias CENDIS</span></div>';
